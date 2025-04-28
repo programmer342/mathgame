@@ -1,341 +1,252 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mathe-Spiel</title>
-    <style>
-        /* Grundlegendes Styling */
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #121212;
-            color: white;
-            font-family: 'Arial', sans-serif;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Sternenhimmel Hintergrund */
-        .stars {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
-            opacity: 0.2;
-            pointer-events: none;
-        }
-
-        /* Container für das Spiel */
-        .container {
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
-            text-align: center;
-            width: 500px;
-            position: relative;
-        }
-
-        /* Kopfzeile */
-        h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            color: #00FF00;
-        }
-
-        /* Schwierigkeitsstufen */
-        #difficulty-level {
-            margin-bottom: 20px;
-        }
-
-        select {
-            padding: 10px;
-            font-size: 18px;
-            border-radius: 5px;
-            border: none;
-            background-color: #333;
-            color: white;
-        }
-
-        /* Frage Text */
-        #question {
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: #FFDA00;
-        }
-
-        /* Buttons und Container */
-        .button-container {
-            margin-top: 20px;
-        }
-
-        button {
-            padding: 15px 30px;
-            margin: 10px;
-            font-size: 18px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            background-color: #444;
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #00FF00;
-            color: black;
-        }
-
-        .difficulty-btn {
-            background-color: #333;
-            color: white;
-        }
-
-        .switch-btn {
-            background-color: #FF5733;
-        }
-
-        /* Glow-Effekt */
-        .glow {
-            box-shadow: 0 0 15px 5px #00FF00;
-            animation: blink 0.5s infinite alternate;
-        }
-
-        @keyframes blink {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0); }
-        }
-
-        /* Falling Text Effekt */
-        .falling {
-            position: absolute;
-            font-size: 24px;
-            color: #00FF00;
-            animation: fall 3s forwards;
-        }
-
-        @keyframes fall {
-            0% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(300px);
-            }
-        }
-
-        /* Eingabefeld */
-        #manual-answer {
-            padding: 10px;
-            font-size: 18px;
-            border-radius: 5px;
-            width: 150px;
-            margin-top: 10px;
-            background-color: #333;
-            color: white;
-            border: none;
-        }
-
-        .footer {
-            position: absolute;
-            bottom: 10px;
-            width: 100%;
-            text-align: center;
-            font-size: 14px;
-            color: #00FF00;
-        }
-
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mathe-Spiel</title>
+<style>
+    :root {
+        --bg-color: #001100;
+        --text-color: #00FF00;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(var(--bg-color), #003300);
+        font-family: Arial, sans-serif;
+        color: var(--text-color);
+        overflow: hidden;
+        position: relative;
+    }
+    .stars {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: url('https://www.transparenttextures.com/patterns/stardust.png');
+        opacity: 0.2;
+        z-index: 0;
+    }
+    .container {
+        background: rgba(0, 0, 0, 0.7);
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 0 20px var(--text-color);
+        text-align: center;
+        position: relative;
+        z-index: 1;
+        width: 90%;
+        max-width: 500px;
+    }
+    h1 {
+        margin-bottom: 20px;
+    }
+    select {
+        padding: 10px;
+        margin-bottom: 20px;
+        background: #222;
+        color: var(--text-color);
+        border: none;
+        border-radius: 5px;
+    }
+    #question {
+        font-size: 28px;
+        margin-bottom: 30px;
+    }
+    #answer-options {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    #answer-options button {
+        padding: 20px 30px;
+        font-size: 24px;
+        background: #333;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: 0 0 10px var(--text-color);
+    }
+    #answer-options button:hover {
+        background: var(--text-color);
+        color: black;
+        animation: glow 1s infinite alternate;
+    }
+    @keyframes glow {
+        from { box-shadow: 0 0 5px var(--text-color); }
+        to { box-shadow: 0 0 20px var(--text-color); }
+    }
+    #next-question {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 18px;
+        border: none;
+        border-radius: 5px;
+        background: #444;
+        color: white;
+        cursor: pointer;
+    }
+    .falling {
+        position: absolute;
+        font-size: 24px;
+        color: var(--text-color);
+        animation: fall 2s forwards;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
+    }
+    @keyframes fall {
+        0% { top: 0; opacity: 1; }
+        100% { top: 80%; opacity: 0; }
+    }
+    .footer {
+        margin-top: 30px;
+        font-size: 14px;
+    }
+    .color-picker {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(0,0,0,0.7);
+        padding: 10px;
+        border-radius: 10px;
+        z-index: 10;
+        box-shadow: 0 0 10px var(--text-color);
+    }
+    .color-picker label {
+        font-size: 12px;
+        color: var(--text-color);
+    }
+</style>
 </head>
 <body>
 
-    <div class="stars"></div> <!-- Sternenhimmel Hintergrund -->
+<div class="stars"></div>
 
-    <div class="container">
-        <h1>Mathe-Spiel</h1>
-        <div id="difficulty-level">
-            <label for="difficulty" style="color: #00FF00; font-size: 20px;">Wähle Schwierigkeitsstufe:</label>
-            <select id="difficulty" class="difficulty-btn">
-                <option value="1">Leicht</option>
-                <option value="2">Mittel</option>
-                <option value="3">Schwer</option>
-                <option value="4">Hart</option>
-                <option value="5">Meister</option>
-                <option value="6">Experte</option>
-                <option value="7">Genius</option>
-                <option value="8">Legende</option>
-                <option value="9">Titan</option>
-                <option value="10">Unbesiegbar</option>
-            </select>
-        </div>
-
-        <div id="question"></div>
-
-        <div id="answer-container">
-            <div id="answer-options">
-                <!-- Dynamische Antwortmöglichkeiten werden hier eingefügt -->
-            </div>
-            <input type="text" id="manual-answer" placeholder="Manuell eingeben" style="display: none;">
-        </div>
-
-        <div class="button-container">
-            <button id="check-answer">Antwort überprüfen</button>
-            <button id="next-question">Nächste Rechnung</button>
-            <button id="switch-mode" class="switch-btn">Antwortmodus: 3 Optionen</button>
-        </div>
+<div class="color-picker">
+    <div>
+        <label for="bg-color">Hintergrund:</label><br>
+        <input type="color" id="bg-color" value="#001100">
     </div>
+    <div style="margin-top:10px;">
+        <label for="text-color">Textfarbe:</label><br>
+        <input type="color" id="text-color" value="#00FF00">
+    </div>
+</div>
+
+<div class="container">
+    <h1>Mathe-Spiel</h1>
+    <select id="difficulty">
+        <option value="1">Leicht</option>
+        <option value="2">Mittel</option>
+        <option value="3">Schwer</option>
+        <option value="4">Hart</option>
+        <option value="5">Meister</option>
+        <option value="6">Experte</option>
+        <option value="7">Genius</option>
+        <option value="8">Legende</option>
+        <option value="9">Titan</option>
+        <option value="10">Unbesiegbar</option>
+    </select>
+
+    <div id="question">Frage wird geladen...</div>
+
+    <div id="answer-options"></div>
+
+    <button id="next-question">Nächste Rechnung</button>
 
     <div class="footer">
-        <p>Viel Spaß beim Spielen! - Mathe-Spiel</p>
-        <p>Mit Liebe von Erik .F</p>
+        Viel Spaß beim Mathe-Spiel!<br>
+        Mit Liebe von Erik .F
     </div>
+</div>
 
-    <script>
-        let currentAnswer = null;
-        let gameMode = 'multiple';  // 'multiple' oder 'manual'
-        let currentQuestion = null;
+<script>
+let correctAnswer = 0;
 
-        // Funktion um eine Frage zu generieren
-        function generateQuestion() {
-            const difficulty = document.getElementById('difficulty').value;
-            let num1, num2, correctAnswer, operator;
+function generateQuestion() {
+    const difficulty = parseInt(document.getElementById('difficulty').value);
+    let num1 = Math.floor(Math.random() * difficulty * 10) + 1;
+    let num2 = Math.floor(Math.random() * difficulty * 10) + 1;
+    let operator = ['+', '-', '×'][Math.floor(Math.random() * 3)];
+    
+    if (difficulty >= 5) operator = ['+', '-', '×', '÷'][Math.floor(Math.random() * 4)];
 
-            // Fragen je nach Schwierigkeitsgrad generieren
-            if (difficulty == 1) {
-                num1 = Math.floor(Math.random() * 10) + 1;
-                num2 = Math.floor(Math.random() * 10) + 1;
-                operator = Math.random() < 0.5 ? '+' : '×';  // + oder *
-                correctAnswer = operator === '+' ? num1 + num2 : num1 * num2;  // Addition oder Multiplikation
-            } else if (difficulty == 2) {
-                num1 = Math.floor(Math.random() * 15) + 1;
-                num2 = Math.floor(Math.random() * 15) + 1;
-                operator = Math.random() < 0.5 ? '+' : (Math.random() < 0.5 ? '×' : '-');  // +, -, *
-                if (operator === '+') correctAnswer = num1 + num2;
-                else if (operator === '-') correctAnswer = num1 - num2;
-                else correctAnswer = num1 * num2;
-            } else if (difficulty == 3) {
-                num1 = Math.floor(Math.random() * 25) + 1;
-                num2 = Math.floor(Math.random() * 25) + 1;
-                operator = Math.random() < 0.33 ? '+' : (Math.random() < 0.5 ? '×' : '-');
-                if (operator === '+') correctAnswer = num1 + num2;
-                else if (operator === '-') correctAnswer = num1 - num2;
-                else correctAnswer = num1 * num2;
-            } else if (difficulty == 4) {
-                num1 = Math.floor(Math.random() * 50) + 1;
-                num2 = Math.floor(Math.random() * 50) + 1;
-                operator = Math.random() < 0.5 ? '+' : (Math.random() < 0.5 ? '×' : '-');
-                if (operator === '+') correctAnswer = num1 + num2;
-                else if (operator === '-') correctAnswer = num1 - num2;
-                else correctAnswer = num1 * num2;
-            } else if (difficulty >= 5) {
-                num1 = Math.floor(Math.random() * 100) + 1;
-                num2 = Math.floor(Math.random() * 100) + 1;
-                operator = Math.random() < 0.25 ? '+' : (Math.random() < 0.5 ? '×' : (Math.random() < 0.75 ? '-' : '/'));
-                if (operator === '+') correctAnswer = num1 + num2;
-                else if (operator === '-') correctAnswer = num1 - num2;
-                else if (operator === '×') correctAnswer = num1 * num2;
-                else correctAnswer = Math.floor(num1 / num2);  // Division mit ganzzahligem Ergebnis
-            }
+    correctAnswer = calculateAnswer(num1, num2, operator);
 
-            // Frage anzeigen
-            document.getElementById('question').innerHTML = `${num1} ${operator} ${num2} = ?`;
+    document.getElementById('question').innerText = `${num1} ${operator} ${num2} = ?`;
 
-            // Antwortmöglichkeiten oder manuelle Eingabe vorbereiten
-            currentQuestion = { num1, num2, operator, correctAnswer };
+    generateOptions(correctAnswer);
+}
 
-            if (gameMode === 'multiple') {
-                const answers = [correctAnswer];
-                while (answers.length < 3) {
-                    let randomAnswer = Math.floor(Math.random() * 200) + 1;
-                    if (!answers.includes(randomAnswer)) {
-                        answers.push(randomAnswer);
-                    }
-                }
-                answers.sort(() => Math.random() - 0.5); // Zufällig mischen
+function calculateAnswer(a, b, op) {
+    switch (op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '×': return a * b;
+        case '÷': return Math.floor(a / b);
+    }
+}
 
-                // Antwort-Buttons erstellen
-                const answerOptions = document.getElementById('answer-options');
-                answerOptions.innerHTML = '';
-                answers.forEach(answer => {
-                    const btn = document.createElement('button');
-                    btn.textContent = answer;
-                    btn.onclick = () => handleAnswerClick(btn, answer, correctAnswer);
-                    answerOptions.appendChild(btn);
-                });
-            } else {
-                document.getElementById('manual-answer').style.display = 'inline-block';
-                document.getElementById('manual-answer').value = '';
-                document.getElementById('answer-options').innerHTML = ''; // Alle Antwortbuttons entfernen
-            }
+function generateOptions(correct) {
+    const optionsContainer = document.getElementById('answer-options');
+    optionsContainer.innerHTML = '';
+
+    let options = [correct];
+    while (options.length < 3) {
+        let wrong = correct + Math.floor(Math.random() * 20 - 10);
+        if (wrong !== correct && !options.includes(wrong)) {
+            options.push(wrong);
         }
+    }
 
-        // Handle Answer Click (Glow-Effekt und Blinken)
-        function handleAnswerClick(button, selectedAnswer, correctAnswer) {
-            // Setze Glow-Effekt
-            button.classList.add('glow');
-            setTimeout(() => {
-                button.classList.remove('glow');
-            }, 1000);
+    options.sort(() => Math.random() - 0.5);
 
-            // Überprüfe die Antwort und gehe direkt zur nächsten Frage bei richtiger Antwort
-            document.getElementById('check-answer').onclick = () => checkAnswer(selectedAnswer, correctAnswer);
-        }
+    options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => handleAnswer(opt);
+        optionsContainer.appendChild(btn);
+    });
+}
 
-        // Antwort überprüfen
-        function checkAnswer(selectedAnswer, correctAnswer) {
-            const resultText = selectedAnswer === correctAnswer ? 'Richtig!' : 'Falsch';
-            displayFallingText(resultText);
+function handleAnswer(selected) {
+    if (selected === correctAnswer) {
+        showFallingText('Richtig!');
+        setTimeout(generateQuestion, 500);
+    } else {
+        showFallingText('Falsch!');
+    }
+}
 
-            // Weiter zur nächsten Frage, wenn richtig
-            if (selectedAnswer === correctAnswer) {
-                setTimeout(generateQuestion, 1000);  // Frage nach 1 Sekunde neu laden
-            }
-        }
+function showFallingText(text) {
+    const fall = document.createElement('div');
+    fall.className = 'falling';
+    fall.innerText = text;
+    document.body.appendChild(fall);
+    setTimeout(() => fall.remove(), 2000);
+}
 
-        // Text anzeigen, der nach unten fällt
-        function displayFallingText(text) {
-            const fallingText = document.createElement('div');
-            fallingText.textContent = text;
-            fallingText.classList.add('falling');
-            document.body.appendChild(fallingText);
-        }
+document.getElementById('next-question').onclick = generateQuestion;
+document.getElementById('difficulty').onchange = generateQuestion;
 
-        // Wechseln zwischen Antwortmodi
-        function switchMode() {
-            if (gameMode === 'multiple') {
-                gameMode = 'manual';
-                document.getElementById('switch-mode').textContent = 'Antwortmodus: Manuelle Eingabe';
-                document.getElementById('answer-options').innerHTML = ''; // Entfernen der Antwortoptionen
-                document.getElementById('manual-answer').style.display = 'inline-block';
-            } else {
-                gameMode = 'multiple';
-                document.getElementById('switch-mode').textContent = 'Antwortmodus: 3 Optionen';
-                document.getElementById('manual-answer').style.display = 'none';
-                // Generiere keine neue Frage, sondern behalte die aktuelle
-            }
-        }
+// Farbwechsel:
+document.getElementById('bg-color').addEventListener('input', (e) => {
+    document.documentElement.style.setProperty('--bg-color', e.target.value);
+});
+document.getElementById('text-color').addEventListener('input', (e) => {
+    document.documentElement.style.setProperty('--text-color', e.target.value);
+});
 
-        // Event Listener
-        document.getElementById('next-question').onclick = generateQuestion;
-        document.getElementById('check-answer').onclick = () => {
-            if (gameMode === 'manual') {
-                checkManualAnswer();
-            }
-        };
-        document.getElementById('switch-mode').onclick = switchMode;
-
-        // Erste Frage generieren
-        generateQuestion();
-    </script>
+// Start:
+generateQuestion();
+</script>
 
 </body>
 </html>
